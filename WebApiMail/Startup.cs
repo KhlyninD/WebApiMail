@@ -37,7 +37,7 @@ namespace WebApiMail
             });
             services.AddSwaggerGenNewtonsoftSupport();
             services.AddScoped<EmailsRepository>(); 
-            services.Configure<SmtpSettings>(Configuration.GetSection("Sntp"));
+            services.Configure<SmtpSettings>(Configuration.GetSection("Smtp"));
             services.Configure<DbSettings>(Configuration.GetSection("DBInfo"));
 
         }   
