@@ -15,7 +15,7 @@ namespace WebApiMail.Smtp
 
         public static string CreateMessage(Emails item, SmtpSettings smtpSettings)
         {
-            var EmailBool = new EmailAddressAttribute();
+            var emailBool = new EmailAddressAttribute();
             MailMessage mail = new();
             mail.To.Add(item.RecipientEmails);
             
@@ -31,7 +31,7 @@ namespace WebApiMail.Smtp
                 string[] copy = item.CarbonCopyRecipients;
                 foreach (var i in copy)
                 {
-                    if (EmailBool.IsValid(i)) { mail.CC.Add(i);}
+                    if (emailBool.IsValid(i)) { mail.CC.Add(i);}
                     else { return "Неверный email получателя копии"; }   
                 }
             }
