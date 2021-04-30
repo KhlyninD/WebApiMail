@@ -11,8 +11,8 @@ namespace WebApiMail.Repository
 {
     public class EmailsRepository : IRepository<Emails>
     {
-        private DbSettings connectionString;
-        private SmtpSettings settingSmtpSettings;
+        private readonly DbSettings connectionString;
+        private readonly SmtpSettings settingSmtpSettings;
 
 
         public EmailsRepository(IOptionsMonitor<DbSettings> settingDb, IOptionsMonitor<SmtpSettings> settingSmtp)

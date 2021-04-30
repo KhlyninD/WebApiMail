@@ -16,7 +16,7 @@ namespace WebApiMail.Smtp
         public static string CreateMessage(Emails item, SmtpSettings smtpSettings)
         {
             var foo = new EmailAddressAttribute();
-            MailMessage mail = new MailMessage();
+            MailMessage mail = new();
             mail.To.Add(item.RecipientEmails);
             
             
@@ -37,21 +37,23 @@ namespace WebApiMail.Smtp
             }
             
             
-            
-            SmtpClient smtp = new SmtpClient();
-            smtp.Host = smtpSettings.SntpHost;
-            smtp.EnableSsl = true;
-            smtp.Credentials = new NetworkCredential(smtpSettings.Login, smtpSettings.Pass);
-            try
+            using (SmtpClient smtp = new())
             {
-                smtp.Send(mail);
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
-            }
-            
+                //SmtpClient smtp = new();
+                smtp.Host = smtpSettings.SntpHost;
+                smtp.EnableSsl = true;
+                smtp.Credentials = new NetworkCredential(smtpSettings.Login, smtpSettings.Pass);
+                try
+                {
+                    smtp.Send(mail);
 
+                }
+                catch (Exception ex)
+                {
+                    return ex.ToString();
+                }
+
+            }
             return "ok";
 
 
