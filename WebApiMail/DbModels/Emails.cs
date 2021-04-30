@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace WebApiMail.DbModels
 {
+
     public class Emails : BaseEntity
     {
-        [Key]
+        [Key, JsonIgnore]
         public int Id { get; set; }
 
         [Required, EmailAddress]
@@ -19,9 +18,14 @@ namespace WebApiMail.DbModels
         [Required]
         public string TextEmails { get; set; }
         
-        public string CarbonCopyRecipients { get; set; }
-        //[Required]
+        public string[] CarbonCopyRecipients { get; set; }
+        
         public string ExceptionPostEmails { get; set; }
+
+
+
+
+
 
 
     }

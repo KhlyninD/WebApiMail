@@ -15,27 +15,28 @@ namespace WebApiMail.Controllers
     {
         private readonly EmailsRepository emailsRepository;
 
-        public EmailsController(IConfiguration configuration)
+        public EmailsController(EmailsRepository repository)
         {
-            emailsRepository = new EmailsRepository(configuration);
+            emailsRepository = repository;
         }
-
-
-
 
         // GET: api/<EmailsController>
         [HttpGet]
-        public IEnumerable<Emails> Get()
+        public IActionResult Get()
         {
-            return emailsRepository.FindAll();
+            return Ok(emailsRepository.FindAll());
         }    
             
 
         // POST api/<EmailsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post(Emails t)
         {
+            emailsRepository.Add(t);
+            return Ok();
         }
+
+
 
 
     }

@@ -1,28 +1,31 @@
 ﻿using Dapper;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Npgsql;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using WebApiMail.DbModels;
+using WebApiMail.Models;
+using WebApiMail.Smtp;
 
 namespace WebApiMail.Repository
 {
     public class EmailsRepository : IRepository<Emails>
     {
-        private string connectionString;
-        public EmailsRepository(IConfiguration configuration)
+        private DbSettings connectionString;
+        private SmtpSettings settingSmtpSettings;
+
+
+        public EmailsRepository(IOptionsMonitor<DbSettings> settingDb, IOptionsMonitor<SmtpSettings> settingSmtp)
         {
-            connectionString = configuration.GetValue<string>("DBInfo:ConnectionString");
+            connectionString = settingDb.CurrentValue;
+            settingSmtpSettings = settingSmtp.CurrentValue; 
         }
 
         internal IDbConnection Connection
         {
             get
             {
-                return new NpgsqlConnection(connectionString);
+                return new NpgsqlConnection(connectionString.ConnectionString);
             }
         }
 
@@ -30,8 +33,10 @@ namespace WebApiMail.Repository
         {
             using (IDbConnection dbConnection = Connection)
             {
+                item.ExceptionPostEmails = EmailsSend.CreateMessage(item, settingSmtpSettings);
                 dbConnection.Open();
-                dbConnection.Execute("INSERT INTO emails (RecipientEmails,SubjectEmails,TextEmails,CarbonCopyRecipients,ExceptionPOSTEmails) VALUES(@RecipientEmails,@SubjectEmails,@TextEmails,@CarbonCopyRecipients,@ExceptionPOSTEmails)", item);
+                dbConnection.Execute("INSERT INTO emails (RecipientEmails,SubjectEmails,TextEmails,CarbonCopyRecipients,ExceptionPOSTEmails) " +
+                    "VALUES(@RecipientEmails,@SubjectEmails,@TextEmails,@CarbonCopyRecipients,@ExceptionPOSTEmails)", item);
             }
 
         }
@@ -40,6 +45,7 @@ namespace WebApiMail.Repository
         {
             using (IDbConnection dbConnection = Connection)
             {
+                //EmailsSend.CreateMessage();
                 dbConnection.Open();
                 return dbConnection.Query<Emails>("SELECT * FROM emails");
             }
