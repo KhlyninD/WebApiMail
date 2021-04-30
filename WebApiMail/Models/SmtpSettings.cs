@@ -11,8 +11,8 @@ namespace WebApiMail.Models
 
         public string Pass { get; set; }
 
-        public string SntpHost { get; set; }
+        public string SmtpHost { get; set; }
 
-        public string SntpPort { get; set; }
+        public string SmtpPort { get; set; }
     }
 }
